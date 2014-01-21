@@ -26,12 +26,18 @@ void myGlutInit(int *argc, char **argv) {
     static GLfloat lmodel_ambient[] = {0.2, 0.2, 0.2, 1.0};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+
+    glShadeModel(GL_SMOOTH);
+
+    
     static GLfloat light0_diffuse[] = {1.0, 1.0, 1.0, 1.0};
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
-    glEnable(GL_LIGHT0);
     static GLfloat light1_diffuse[] = {0.5, 0.5, 0.5, 1.0};
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
     glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
+
+    glEnable(GL_LIGHT0);
     glEnable(GL_LIGHT1);
+
     glEnable(GL_NORMALIZE);
     glEnable(GL_LIGHTING);
 
