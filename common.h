@@ -9,6 +9,9 @@
 #include <assert.h>
 
 #include "constants.h"
+#include "GL/freeglut.h"
+
+double modulus(double a, double b);
 
 typedef struct Vertex {
   float x, y, z;
@@ -29,14 +32,19 @@ typedef struct Mesh {
   Face *faces;
 } Mesh;
 
+extern int goto_triangle, goto_square, goto_pentagon;
+
 extern int GLUTwindow;
 extern int GLUTwindow_height;
 extern int GLUTwindow_width;
 extern bool GLUTmouse_wheel;
 extern int GLUTmouse[2];
 extern int GLUTbutton[3];
-//extern int GLUTarrows[4];
 extern int GLUTmodifiers;
+
+extern bool lightOn;
+extern GLfloat difflight_position[4];
+extern GLfloat difflight_color[4];
 
 extern int scaling;
 extern int translating;
@@ -49,5 +57,6 @@ extern float translation[3];
 extern bool debugInfo;
 
 extern Mesh *mesh;
+extern GLuint textures[3];
 
 #endif

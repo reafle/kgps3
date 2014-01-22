@@ -26,12 +26,7 @@ void MouseCallback(int button, int state, int x, int y) {
         rotating = (button == GLUT_LEFT_BUTTON);
         scaling = (button == GLUT_MIDDLE_BUTTON);
         translating = (button == GLUT_RIGHT_BUTTON);
-        if (rotating || scaling || translating) {
-            glutIdleFunc(SceneDisplayCallback);
-        } else {
-            glutIdleFunc(0);
-        }
-
+        
         // Remember button state 
         int b = (button == GLUT_LEFT_BUTTON) ? 0 : ((button == GLUT_MIDDLE_BUTTON) ? 1 : 2);
         GLUTbutton[b] = (state == GLUT_DOWN) ? 1 : 0;
@@ -73,12 +68,73 @@ void MotionCallback(int x, int y) {
 void KeyboardDownCallback(unsigned char key, int x, int y) {
     switch (key) {
         case 'i':
-        case 'I': // ESCAPE
+        case 'I': 
             debugInfo = !debugInfo;
             break;
         case 27: // ESCAPE
             myGlutStop();
             break;
+            
+// animation controls
+        case '1' :
+            goto_triangle = 1;
+            break;
+        case '2' :
+            goto_square = 1;
+            break;
+        case '3' :
+            break;
+            
+// light controls            
+        case 'a' :
+        case 'A' :
+            if (difflight_color[0] > 0) {
+                difflight_color[0] -= 0.05;
+            } else {
+                difflight_color[0] = 0;                
+            }
+            if (difflight_color[0] > 0) {
+                difflight_color[1] -= 0.05;
+            } else {
+                difflight_color[1] = 0;                
+            }
+            if (difflight_color[2] > 0) {
+                difflight_color[2] -= 0.05;
+            } else {
+                difflight_color[2] = 0;                
+            }
+            break;
+            
+        case 's' :
+        case 'S' :
+            if (difflight_color[0] < 1) {
+                difflight_color[0] += 0.05;
+            } else {
+                difflight_color[0] = 1;
+            }            
+            if (difflight_color[1] < 1) {
+                difflight_color[1] += 0.05;
+            } else {
+                difflight_color[1] = 1;
+            }            
+            if (difflight_color[2] < 1) {
+                difflight_color[2] += 0.05;
+            } else {
+                difflight_color[2] = 1;
+            }            
+            break;
+        
+        case 'd' :
+        case 'D' :
+            if (lightOn) {
+                glDisable(GL_LIGHT0);
+            } else {
+                glEnable(GL_LIGHT0);
+            }
+            lightOn = !lightOn;
+            break;
+            
+            
     }
 
     // Remember mouse position 
@@ -126,20 +182,18 @@ void SceneDisplayCallback(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Set lights
-    static GLfloat light0_position[] = {3.0, 4.0, 5.0, 0.0};
+    glLightfv(GL_LIGHT0, GL_POSITION, difflight_position);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, difflight_color);
+
     static GLfloat light1_position[] = {-3.0, -4.0, -5.0, 0.0};
-    glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
     glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
 
-//    glEnable(GL_LIGHT0);
-//    glEnable(GL_LIGHT1);
-//    glDisable(GL_LIGHT0);
-//    glDisable(GL_LIGHT1);
 
     // Draw stuff 
     drawScene();
     drawDebugInfo();
 
+    processAnimation();
     // Swap buffers 
     glutSwapBuffers();
 

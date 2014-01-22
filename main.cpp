@@ -5,6 +5,7 @@
 #include "GL/freeglut.h"
 
 void myGlutInit(int *argc, char **argv) {
+    
     // Open window 
     glutInit(argc, argv);
     glutInitWindowPosition(100, 100);
@@ -12,27 +13,22 @@ void myGlutInit(int *argc, char **argv) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); // | GLUT_STENCIL
     GLUTwindow = glutCreateWindow(TITLE_STRING);
 
-    // Initialize GLUT callback functions 
-	glutKeyboardFunc( KeyboardDownCallback );
-//	glutKeyboardUpFunc( KeyboardUpCallback );			
-	glutMouseFunc(MouseCallback);
-	glutReshapeFunc( WindowResizeCallback );
-	glutDisplayFunc( SceneDisplayCallback );
-//    glutSpecialFunc(GLUTSpecial);
+    glutKeyboardFunc( KeyboardDownCallback );
+    glutMouseFunc(MouseCallback);
+    glutReshapeFunc( WindowResizeCallback );
+    glutDisplayFunc( SceneDisplayCallback );
     glutMotionFunc(MotionCallback);
-    glutIdleFunc(0);
+    glutIdleFunc(SceneDisplayCallback);
 
     // Initialize lights 
     static GLfloat lmodel_ambient[] = {0.2, 0.2, 0.2, 1.0};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-
     glShadeModel(GL_SMOOTH);
 
     
-    static GLfloat light0_diffuse[] = {1.0, 1.0, 1.0, 1.0};
     static GLfloat light1_diffuse[] = {0.5, 0.5, 0.5, 1.0};
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
+//    glLightfv(GL_LIGHT0, GL_DIFFUSE, difflight_color);
     glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
 
     glEnable(GL_LIGHT0);
@@ -40,7 +36,7 @@ void myGlutInit(int *argc, char **argv) {
 
     glEnable(GL_NORMALIZE);
     glEnable(GL_LIGHTING);
-
+            
     // Initialize graphics modes 
     glEnable(GL_DEPTH_TEST);
 }
@@ -56,8 +52,10 @@ void myGlutMain(void) {
         Vertex& vert = mesh->verts[i];
         if (vert.x < bbox[0][0]) bbox[0][0] = vert.x;
         else if (vert.x > bbox[1][0]) bbox[1][0] = vert.x;
+        
         if (vert.y < bbox[0][1]) bbox[0][1] = vert.y;
         else if (vert.y > bbox[1][1]) bbox[1][1] = vert.y;
+        
         if (vert.z < bbox[0][2]) bbox[0][2] = vert.z;
         else if (vert.z > bbox[1][2]) bbox[1][2] = vert.z;
     }
@@ -91,6 +89,10 @@ int main(int argc, char **argv) {
     } else {
         fprintf(stdout, "Mesh parsed successfully\n");
     }
+    
+    textures[0] = LoadTexture( "tex1.bmp" );
+    textures[1] = LoadTexture( "tex2.bmp" );
+    textures[2] = LoadTexture( "tex3.bmp" );
 
     myGlutMain();
     

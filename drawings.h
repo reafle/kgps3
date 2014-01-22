@@ -7,5 +7,6 @@
 
 void drawScene(void);
 void drawDebugInfo(void);
+void processAnimation(void);
 
 #endif
